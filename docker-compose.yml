@@ -31,19 +31,19 @@ services:
       - DATABASE_URL=file:./dev.db
       - NATS_SERVERS=nats://nats-server:4222
   
-  # orders-microservice:
-  #   depends_on:
-  #     - orders-db
-  #     - nats-server
-  #   build: ./orders-ms
-  #   volumes:
-  #     - ./orders-ms/src:/usr/src/app/src
-  #   command: npm run start:dev
-  #   environment:
-  #     - PORT=3002
-  #     - DATABASE_URL=postgresql://postgres:123456@orders-db:5432/ordersdb?schema=public
-  #     - NATS_SERVICE_NAME=NATS_SERVICE
-  #     - NATS_SERVERS=nats://nats-server:4222
+  orders-microservice:
+    depends_on:
+      - orders-db
+      - nats-server
+    build: ./orders-ms
+    volumes:
+      - ./orders-ms/src:/usr/src/app/src
+    command: npm run start:dev
+    environment:
+      - PORT=3002
+      - DATABASE_URL=postgresql://postgres:123456@orders-db:5432/ordersdb?schema=public
+      - NATS_SERVICE_NAME=NATS_SERVICE
+      - NATS_SERVERS=nats://nats-server:4222
 
   orders-db:
     container_name: orders_database
