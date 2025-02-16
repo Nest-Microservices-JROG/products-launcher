@@ -16,8 +16,8 @@ services:
     command: npm run start:dev
     environment:
       - PORT=3000
-      - NATS_SERVICE_NAME=NATS_SERVICE
-      - NATS_SERVERS=nats://nats-server:4222
+      - NATS_SERVICE_NAME=${NATS_SERVICE_NAME}
+      - NATS_SERVERS=${NATS_SERVERS}
   
   products-microservice:
     build: ./products-ms
@@ -29,7 +29,7 @@ services:
     environment:
       - PORT=3001
       - DATABASE_URL=file:./dev.db
-      - NATS_SERVERS=nats://nats-server:4222
+      - NATS_SERVERS=${NATS_SERVERS}
   
   orders-microservice:
     depends_on:
@@ -42,8 +42,8 @@ services:
     environment:
       - PORT=3002
       - DATABASE_URL=postgresql://postgres:123456@orders-db:5432/ordersdb?schema=public
-      - NATS_SERVICE_NAME=NATS_SERVICE
-      - NATS_SERVERS=nats://nats-server:4222
+      - NATS_SERVICE_NAME=${NATS_SERVICE_NAME}
+      - NATS_SERVERS=${NATS_SERVERS}
 
   orders-db:
     container_name: orders_database
@@ -58,3 +58,19 @@ services:
       - POSTGRES_PASSWORD=123456
       - POSTGRES_DB=ordersdb
   
+  payments-microservice:
+    container_name: payments-ms
+    build: ./payments-ms
+    ports:
+      - ${PAYMENTS_MS_PORT}:3003
+    volumes:
+      - ./payments-ms/src:/usr/src/app/src
+    command: npm run start:dev
+    environment:
+      - PORT=${PAYMENTS_MS_PORT}
+      - NATS_SERVICE_NAME=${NATS_SERVICE_NAME}
+      - NATS_SERVERS=${NATS_SERVERS}
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+      - STRIPE_SUCCESS_URL=${STRIPE_SUCCESS_URL}
+      - STRIPE_CANCEL_URL=${STRIPE_CANCEL_URL}
+      - STRIPE_ENDPOINT_SECRET=${STRIPE_ENDPOINT_SECRET}
