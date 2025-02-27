@@ -36,3 +36,11 @@ git submodule update --remote
 Si se trabaja en el repositorio que tiene los sub-módulos, **primero actualizar y hacer push** en el sub-módulo y **después** en el repositorio principal. 
 
 Si se hace al revés, se perderán las referencias de los sub-módulos en el repositorio principal y tendremos que resolver conflictos.
+
+
+## Comandos útiles de docker para ambiente de PDN
+
+```
+docker build -f dockerfile.prod -t client-gateway .
+docker run -p 3000:3000 -e PORT=3000 -e NATS_SERVICE_NAME=NATS_SERVICE -e NATS_SERVERS=nats://nats-server:4222 client-gateway
+```
