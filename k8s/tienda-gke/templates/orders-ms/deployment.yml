@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: orders-ms
+  name: orders-ms
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: orders-ms
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: orders-ms
+    spec:
+      containers:
+      - image: southamerica-east1-docker.pkg.dev/microservices-nest-452320/image-registry/orders-ms
+        name: orders-ms
+        env:
+        - name: PORT
+          value: "3000"
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: orders-secrets
+              key: database_url
+        - name: NATS_SERVICE_NAME
+          value: "NATS_SERVICE"
+        - name: NATS_SERVERS
+          value: "nats://nats:4222"
+        resources: {}
+status: {}
